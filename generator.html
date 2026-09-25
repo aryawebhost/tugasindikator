@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indikator Surat Resmi Sekolah</title>
+  <!-- Google Fonts: Times New Roman alternative & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Tinos:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==========================================================================
+       1. RESET & VARIABLES
+       ========================================================================== */
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --success: #059669;
+      --success-dark: #047857;
+      --warning: #f59e0b;
+      --warning-dark: #d97706;
+      --dark: #1e293b;
+      --bg-app: #f1f5f9;
+      --border-color: #cbd5e1;
+      --text-main: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================================================
+       2. HEADER & TOOLBAR
+       ========================================================================== */
+    header.app-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      background: var(--primary);
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .brand-text h1 {
+      font-size: 16px;
+      color: var(--dark);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: var(--success-dark); }
+    .btn-warning { background: var(--warning); color: white; }
+    .btn-warning:hover { background: var(--warning-dark); }
+    .btn-dark { background: var(--dark); color: white; }
+    .btn-dark:hover { background: #0f172a; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    /* ==========================================================================
+       3. MAIN LAYOUT (2 COLUMNS)
+       ========================================================================== */
+    .app-container {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 20px;
+      padding: 20px;
+      max-width: 1700px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+    }
+
+    @media (max-width: 1024px) {
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ==========================================================================
+       4. FORM PANEL (LEFT)
+       ========================================================================== */
+    .form-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .form-section {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .form-section h2 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 12px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .btn-small {
+      padding: 4px 8px;
+      font-size: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       5. PREVIEW PANEL (RIGHT)
+       ========================================================================== */
+    .preview-panel {
+      background: #e2e8f0;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: auto;
+    }
+
+    .preview-toolbar {
+      background: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+      max-width: 210mm;
+      justify-content: space-between;
+    }
+
+    /* ==========================================================================
+       6. DOKUMEN A4 SURAT (DESAIN FORMAL RESMI)
+       ========================================================================== */
+    .a4-paper {
+      background: white;
+      width: 210mm;
+      min-height: 297mm;
+      padding: 20mm 25mm 20mm 25mm;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      color: #000;
+      font-family: 'Tinos', 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.4;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    /* Kop Surat */
+    .kop-surat {
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid #000;
+      padding-bottom: 8px;
+      position: relative;
+    }
+
+    .kop-surat::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      right: 0;
+      border-bottom: 1px solid #000;
+    }
+
+    .kop-logo {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin-right: 15px;
+    }
+
+    .kop-text {
+      flex: 1;
+      text-align: center;
+    }
+
+    .kop-text h3 { font-size: 11pt; font-weight: bold; text-transform: uppercase; margin: 0; }
+    .kop-text h2 { font-size: 12pt; font-weight: bold; text-transform: uppercase; margin: 0; }
+    .kop-text h1 { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin: 2px 0; }
+    .kop-text p { font-size: 9.5pt; margin: 0; }
+
+    /* Meta Surat */
+    .surat-meta {
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .meta-table {
+      border-collapse: collapse;
+    }
+
+    .meta-table td {
+      padding: 1px 0;
+      vertical-align: top;
+    }
+
+    .meta-table td:nth-child(1) { width: 80px; }
+    .meta-table td:nth-child(2) { width: 15px; }
+
+    .tgl-surat {
+      text-align: right;
+    }
+
+    /* Penerima Surat */
+    .penerima-block {
+      margin-bottom: 20px;
+    }
+
+    .penerima-text {
+      white-space: pre-line;
+      margin-top: 4px;
+    }
+
+    /* Isi Surat */
+    .isi-paragraf {
+      text-align: justify;
+      white-space: pre-line;
+      margin-bottom: 12px;
+      text-indent: 30px;
+    }
+
+    .detail-table {
+      margin: 12px 0 12px 30px;
+      border-collapse: collapse;
+      width: calc(100% - 30px);
+    }
+
+    .detail-table td {
+      padding: 2px 0;
+      vertical-align: top;
+    }
+
+    .detail-table td:nth-child(1) { width: 160px; }
+    .detail-table td:nth-child(2) { width: 15px; }
+
+    /* Tanda Tangan */
+    .ttd-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 40px;
+      page-break-inside: avoid;
+    }
+
+    .ttd-block {
+      width: 250px;
+      text-align: center;
+    }
+
+    .ttd-space {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ttd-img {
+      max-height: 80px;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .ttd-nama {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       7. CSS PRINT SPECIAL RULE
+       ========================================================================== */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      .preview-panel,
+      #printable-area,
+      #printable-area * {
+        visibility: visible;
+      }
+
+      .preview-panel {
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 0;
+        background: none;
+        border: none;
+        width: 100%;
+      }
+
+      .preview-toolbar,
+      header.app-header,
+      .form-panel {
+        display: none !important;
+      }
+
+      .a4-paper {
+        box-shadow: none;
+        margin: 0;
+        width: 210mm;
+        min-height: 297mm;
+        padding: 20mm 25mm;
+      }
+
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">S</div>
+      <div class="brand-text">
+        <h1>INDIKATOR SURAT RESMI SEKOLAH</h1>
+        <p>Generator Surat Resmi Sekolah Indonesia</p>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn btn-success" onclick="simpanSurat()">💾 Simpan Surat</button>
+      <button class="btn btn-warning" onclick="duplikasiSurat()">📋 Duplikasi</button>
+      <button class="btn btn-dark" onclick="exportJSON()">⬇ Export JSON</button>
+      <button class="btn btn-dark" onclick="document.getElementById('importFile').click()">⬆ Import JSON</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+    </div>
+  </header>
+
+  <!-- CONTAINER UTAMA -->
+  <div class="app-container">
+    
+    <!-- PANEL FORM (KIRI) -->
+    <div class="form-panel">
+      
+      <!-- SECTION 1 -->
+      <div class="form-section">
+        <h2>1. Kop & Identitas Sekolah</h2>
+        
+        <div class="form-group">
+          <label>Logo Sekolah</label>
+          <input type="file" id="inputLogo" accept="image/*" onchange="handleLogoUpload(event)">
+        </div>
+
+        <div class="form-group">
+          <label>Instansi Atas (Opsional)</label>
+          <input type="text" id="inputInstansi" value="PEMERINTAH PROVINSI DKI JAKARTA" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group">
+          <label>Dinas / Yayasan</label>
+          <input type="text" id="inputDinas" value="DINAS PENDIDIKAN" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group">
+          <label>Nama Sekolah / Lembaga</label>
+          <input type="text" id="inputSekolah" value="SMA NEGERI 1 NUSANTARA" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group">
+          <label>Alamat & Telepon</label>
+          <input type="text" id="inputAlamat" value="Jl. Pendidikan No. 123, Jakarta Selatan | Telp: (021) 1234567" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group">
+          <label>Email & Website</label>
+          <input type="text" id="inputKontak" value="Email: info@sman1nusantara.sch.id | Web: sman1nusantara.sch.id" oninput="updatePreview()">
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div class="form-section">
+        <h2>
+          2. Jenis & Format Surat
+          <button class="btn btn-primary btn-small" onclick="generateAutoNumber()">🔄 Nomor Otomatis</button>
+        </h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Jenis Surat</label>
+            <select id="selectJenis" onchange="updatePreview()">
+              <option value="Surat Undangan Orang Tua/Wali">Surat Undangan Orang Tua/Wali</option>
+              <option value="Surat Undangan Official">Surat Undangan Official</option>
+              <option value="Surat Pemberitahuan">Surat Pemberitahuan</option>
+              <option value="Surat Tugas">Surat Tugas</option>
+              <option value="Surat Keterangan">Surat Keterangan</option>
+              <option value="Surat Permohonan">Surat Permohonan</option>
+              <option value="Surat Edaran">Surat Edaran</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Nomor Surat</label>
+            <input type="text" id="inputNomor" value="421.3/088/SMAN1/2026" oninput="updatePreview()">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tanggal Surat</label>
+            <input type="date" id="inputTanggal" value="2026-09-25" onchange="updatePreview()">
+          </div>
+
+          <div class="form-group">
+            <label>Lampiran</label>
+            <input type="text" id="inputLampiran" value="1 (Satu) Berkas" oninput="updatePreview()">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Perihal Surat</label>
+          <input type="text" id="inputPerihal" value="Undangan Rapat Orang Tua Siswa" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group">
+          <label>Keterangan Tujuan / Penerima</label>
+          <textarea id="inputPenerima" oninput="updatePreview()">Bapak/Ibu Orang Tua / Wali Murid
+Siswa Kelas XII
+di Tempat</textarea>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div class="form-section">
+        <h2>3. Data Detail (Siswa/Acara)</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nama Siswa / Guru / Staf</label>
+            <input type="text" id="inputDetailNama" value="Muhammad Rizky Pratama" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>NIS / NISN / NIP</label>
+            <input type="text" id="inputDetailNis" value="10293847" oninput="updatePreview()">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Kelas / Jabatan</label>
+            <input type="text" id="inputDetailKelas" value="XII TKJ 1" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Hari / Tanggal Kegiatan</label>
+            <input type="text" id="inputDetailHari" value="Sabtu, 17 Oktober 2026" oninput="updatePreview()">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Waktu Kegiatan</label>
+            <input type="text" id="inputDetailWaktu" value="08.30 - 11.30 WIB" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Tempat / Ruang</label>
+            <input type="text" id="inputDetailTempat" value="Aula Utama SMA Negeri 1 Nusantara" oninput="updatePreview()">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div class="form-section">
+        <h2>4. Isi & Penutup Surat</h2>
+
+        <div class="form-group">
+          <label>Paragraf Pembuka & Isi</label>
+          <textarea id="inputIsi" rows="4" oninput="updatePreview()">Sehubungan dengan persiapan pelaksanaan Ujian Akhir Semester (UAS) serta sosialisasi program kelulusan, kami mengundang Bapak/Ibu Orang Tua/Wali Murid untuk hadir dalam pertemuan koordinasi yang akan dilaksanakan pada:</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Paragraf Penutup</label>
+          <textarea id="inputPenutup" rows="3" oninput="updatePreview()">Mengingat pentingnya agenda ini bagi kelanjutan studi para siswa, kami sangat mengharapkan kehadiran Bapak/Ibu secara tepat waktu. Atas perhatian dan kerja samanya, kami sampaikan terima kasih.</textarea>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div class="form-section">
+        <h2>5. Pejabat Penandatangan</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Kota Penerbitan</label>
+            <input type="text" id="inputKota" value="Jakarta" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Jabatan Penandatangan</label>
+            <input type="text" id="inputJabatan" value="Kepala Sekolah," oninput="updatePreview()">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nama Pejabat</label>
+            <input type="text" id="inputPejabatNama" value="Dr. Budi Santoso, M.Pd." oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>NIP Pejabat</label>
+            <input type="text" id="inputPejabatNip" value="19750815 200003 1 002" oninput="updatePreview()">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Unggah TTD / Stempel (Opsional PNG Transparan)</label>
+          <input type="file" id="inputTtd" accept="image/*" onchange="handleTtdUpload(event)">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PANEL PREVIEW (KANAN) -->
+    <div class="preview-panel">
+      <div class="preview-toolbar">
+        <span style="font-size: 13px; font-weight: 600; color: var(--dark);">Live Preview (Ukuran Kertas A4)</span>
+        <button class="btn btn-primary" onclick="cetakSurat()">🖨️ Cetak / Download PDF</button>
+      </div>
+
+      <!-- LEMBAR A4 -->
+      <div class="a4-paper" id="printable-area">
+        
+        <!-- KOP -->
+        <div class="kop-surat">
+          <img id="prevLogo" class="kop-logo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2'><path d='M22 10v6M2 10l10-5 10 5-10 5z'/><path d='M6 12v5c3 3 9 3 12 0v-5'/></svg>" alt="Logo">
+          <div class="kop-text">
+            <h3 id="prevInstansi">PEMERINTAH PROVINSI DKI JAKARTA</h3>
+            <h2 id="prevDinas">DINAS PENDIDIKAN</h2>
+            <h1 id="prevSekolah">SMA NEGERI 1 NUSANTARA</h1>
+            <p id="prevAlamat">Jl. Pendidikan No. 123, Jakarta Selatan | Telp: (021) 1234567</p>
+            <p id="prevKontak">Email: info@sman1nusantara.sch.id | Web: sman1nusantara.sch.id</p>
+          </div>
+        </div>
+
+        <!-- META SURAT -->
+        <div class="surat-meta">
+          <table class="meta-table">
+            <tr>
+              <td>Nomor</td>
+              <td>:</td>
+              <td id="prevNomor">421.3/088/SMAN1/2026</td>
+            </tr>
+            <tr>
+              <td>Lampiran</td>
+              <td>:</td>
+              <td id="prevLampiran">1 (Satu) Berkas</td>
+            </tr>
+            <tr>
+              <td>Perihal</td>
+              <td>:</td>
+              <td id="prevPerihal" style="font-weight: bold;">Undangan Rapat Orang Tua Siswa</td>
+            </tr>
+          </table>
+
+          <div class="tgl-surat">
+            <span id="prevKota">Jakarta</span>, <span id="prevTanggal">25 September 2026</span>
+          </div>
+        </div>
+
+        <!-- PENERIMA -->
+        <div class="penerima-block">
+          <p>Kepada Yth.</p>
+          <div class="penerima-text" id="prevPenerima">Bapak/Ibu Orang Tua / Wali Murid
+Siswa Kelas XII
+di Tempat</div>
+        </div>
+
+        <!-- ISI -->
+        <div class="isi-paragraf" id="prevIsi">
+          Sehubungan dengan persiapan pelaksanaan Ujian Akhir Semester (UAS) serta sosialisasi program kelulusan, kami mengundang Bapak/Ibu Orang Tua/Wali Murid untuk hadir dalam pertemuan koordinasi yang akan dilaksanakan pada:
+        </div>
+
+        <!-- RINCIAN DETAIL -->
+        <table class="detail-table" id="prevDetailTable">
+          <tr id="rowNama"><td>Nama</td><td>:</td><td id="prevDetailNama">Muhammad Rizky Pratama</td></tr>
+          <tr id="rowNis"><td>NIS / NISN / NIP</td><td>:</td><td id="prevDetailNis">10293847</td></tr>
+          <tr id="rowKelas"><td>Kelas / Jabatan</td><td>:</td><td id="prevDetailKelas">XII TKJ 1</td></tr>
+          <tr id="rowHari"><td>Hari / Tanggal</td><td>:</td><td id="prevDetailHari">Sabtu, 17 Oktober 2026</td></tr>
+          <tr id="rowWaktu"><td>Waktu</td><td>:</td><td id="prevDetailWaktu">08.30 - 11.30 WIB</td></tr>
+          <tr id="rowTempat"><td>Tempat</td><td>:</td><td id="prevDetailTempat">Aula Utama SMA Negeri 1 Nusantara</td></tr>
+        </table>
+
+        <!-- PENUTUP -->
+        <div class="isi-paragraf" id="prevPenutup">
+          Mengingat pentingnya agenda ini bagi kelanjutan studi para siswa, kami sangat mengharapkan kehadiran Bapak/Ibu secara tepat waktu. Atas perhatian dan kerja samanya, kami sampaikan terima kasih.
+        </div>
+
+        <!-- TANDA TANGAN -->
+        <div class="ttd-container">
+          <div class="ttd-block">
+            <p id="prevJabatan">Kepala Sekolah,</p>
+            <div class="ttd-space">
+              <img id="prevTtdImg" class="ttd-img" src="" style="display: none;">
+            </div>
+            <p class="ttd-nama" id="prevPejabatNama">Dr. Budi Santoso, M.Pd.</p>
+            <p id="prevPejabatNip">NIP. 19750815 200003 1 002</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JAVASCRIPT UTAMA -->
+  <script>
+    let logoBase64 = "";
+    let ttdBase64 = "";
+
+    // FORMAT TANGGAL INDONESIA
+    function formatTanggalIndo(dateString) {
+      if (!dateString) return "";
+      const date = new Date(dateString);
+      const bulan = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+      ];
+      return `${date.getDate()} ${bulan[date.getMonth()]} ${date.getFullYear()}`;
+    }
+
+    // UPDATE PREVIEW REAL-TIME
+    function updatePreview() {
+      // Kop
+      document.getElementById("prevInstansi").innerText = document.getElementById("inputInstansi").value;
+      document.getElementById("prevDinas").innerText = document.getElementById("inputDinas").value;
+      document.getElementById("prevSekolah").innerText = document.getElementById("inputSekolah").value;
+      document.getElementById("prevAlamat").innerText = document.getElementById("inputAlamat").value;
+      document.getElementById("prevKontak").innerText = document.getElementById("inputKontak").value;
+
+      // Meta & Penerima
+      document.getElementById("prevNomor").innerText = document.getElementById("inputNomor").value || "-";
+      document.getElementById("prevLampiran").innerText = document.getElementById("inputLampiran").value || "-";
+      document.getElementById("prevPerihal").innerText = document.getElementById("inputPerihal").value || "-";
+      document.getElementById("prevKota").innerText = document.getElementById("inputKota").value;
+      document.getElementById("prevTanggal").innerText = formatTanggalIndo(document.getElementById("inputTanggal").value);
+      document.getElementById("prevPenerima").innerText = document.getElementById("inputPenerima").value;
+
+      // Isi & Penutup
+      document.getElementById("prevIsi").innerText = document.getElementById("inputIsi").value;
+      document.getElementById("prevPenutup").innerText = document.getElementById("inputPenutup").value;
+
+      // Detail Dinamis (Sembunyikan baris jika kosong)
+      updateDetailRow("rowNama", "prevDetailNama", "inputDetailNama");
+      updateDetailRow("rowNis", "prevDetailNis", "inputDetailNis");
+      updateDetailRow("rowKelas", "prevDetailKelas", "inputDetailKelas");
+      updateDetailRow("rowHari", "prevDetailHari", "inputDetailHari");
+      updateDetailRow("rowWaktu", "prevDetailWaktu", "inputDetailWaktu");
+      updateDetailRow("rowTempat", "prevDetailTempat", "inputDetailTempat");
+
+      // Pejabat
+      document.getElementById("prevJabatan").innerText = document.getElementById("inputJabatan").value;
+      document.getElementById("prevPejabatNama").innerText = document.getElementById("inputPejabatNama").value;
+      
+      const nipVal = document.getElementById("inputPejabatNip").value;
+      document.getElementById("prevPejabatNip").innerText = nipVal ? `NIP. ${nipVal}` : "";
+    }
+
+    function updateDetailRow(rowId, prevId, inputId) {
+      const val = document.getElementById(inputId).value.trim();
+      const rowElem = document.getElementById(rowId);
+      if (val) {
+        rowElem.style.display = "table-row";
+        document.getElementById(prevId).innerText = val;
+      } else {
+        rowElem.style.display = "none";
+      }
+    }
+
+    // UPLOAD LOGO & TTD
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          logoBase64 = e.target.result;
+          document.getElementById("prevLogo").src = logoBase64;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleTtdUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          ttdBase64 = e.target.result;
+          const imgElem = document.getElementById("prevTtdImg");
+          imgElem.src = ttdBase64;
+          imgElem.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // GENERATE NOMOR OTOMATIS
+    function generateAutoNumber() {
+      const randomSeq = String(Math.floor(Math.random() * 900) + 100);
+      const year = new Date().getFullYear();
+      document.getElementById("inputNomor").value = `421.3/${randomSeq}/SMAN1/${year}`;
+      updatePreview();
+    }
+
+    // PRINT / DOWNLOAD PDF
+    function cetakSurat() {
+      window.print();
+    }
+
+    // LOCAL STORAGE (SIMPAN & DUPLIKASI)
+    function getFormData() {
+      return {
+        instansi: document.getElementById("inputInstansi").value,
+        dinas: document.getElementById("inputDinas").value,
+        sekolah: document.getElementById("inputSekolah").value,
+        alamat: document.getElementById("inputAlamat").value,
+        kontak: document.getElementById("inputKontak").value,
+        jenis: document.getElementById("selectJenis").value,
+        nomor: document.getElementById("inputNomor").value,
+        tanggal: document.getElementById("inputTanggal").value,
+        lampiran: document.getElementById("inputLampiran").value,
+        perihal: document.getElementById("inputPerihal").value,
+        penerima: document.getElementById("inputPenerima").value,
+        detailNama: document.getElementById("inputDetailNama").value,
+        detailNis: document.getElementById("inputDetailNis").value,
+        detailKelas: document.getElementById("inputDetailKelas").value,
+        detailHari: document.getElementById("inputDetailHari").value,
+        detailWaktu: document.getElementById("inputDetailWaktu").value,
+        detailTempat: document.getElementById("inputDetailTempat").value,
+        isi: document.getElementById("inputIsi").value,
+        penutup: document.getElementById("inputPenutup").value,
+        kota: document.getElementById("inputKota").value,
+        jabatan: document.getElementById("inputJabatan").value,
+        pejabatNama: document.getElementById("inputPejabatNama").value,
+        pejabatNip: document.getElementById("inputPejabatNip").value,
+        logo: logoBase64,
+        ttd: ttdBase64
+      };
+    }
+
+    function applyFormData(data) {
+      if (!data) return;
+      document.getElementById("inputInstansi").value = data.instansi || "";
+      document.getElementById("inputDinas").value = data.dinas || "";
+      document.getElementById("inputSekolah").value = data.sekolah || "";
+      document.getElementById("inputAlamat").value = data.alamat || "";
+      document.getElementById("inputKontak").value = data.kontak || "";
+      document.getElementById("selectJenis").value = data.jenis || "";
+      document.getElementById("inputNomor").value = data.nomor || "";
+      document.getElementById("inputTanggal").value = data.tanggal || "";
+      document.getElementById("inputLampiran").value = data.lampiran || "";
+      document.getElementById("inputPerihal").value = data.perihal || "";
+      document.getElementById("inputPenerima").value = data.penerima || "";
+      document.getElementById("inputDetailNama").value = data.detailNama || "";
+      document.getElementById("inputDetailNis").value = data.detailNis || "";
+      document.getElementById("inputDetailKelas").value = data.detailKelas || "";
+      document.getElementById("inputDetailHari").value = data.detailHari || "";
+      document.getElementById("inputDetailWaktu").value = data.detailWaktu || "";
+      document.getElementById("inputDetailTempat").value = data.detailTempat || "";
+      document.getElementById("inputIsi").value = data.isi || "";
+      document.getElementById("inputPenutup").value = data.penutup || "";
+      document.getElementById("inputKota").value = data.kota || "";
+      document.getElementById("inputJabatan").value = data.jabatan || "";
+      document.getElementById("inputPejabatNama").value = data.pejabatNama || "";
+      document.getElementById("inputPejabatNip").value = data.pejabatNip || "";
+      
+      if (data.logo) {
+        logoBase64 = data.logo;
+        document.getElementById("prevLogo").src = logoBase64;
+      }
+      if (data.ttd) {
+        ttdBase64 = data.ttd;
+        const imgElem = document.getElementById("prevTtdImg");
+        imgElem.src = ttdBase64;
+        imgElem.style.display = "block";
+      }
+      updatePreview();
+    }
+
+    function simpanSurat() {
+      const data = getFormData();
+      localStorage.setItem("surat_tersimpan", JSON.stringify(data));
+      alert("Surat berhasil disimpan ke browser (LocalStorage).");
+    }
+
+    function duplikasiSurat() {
+      generateAutoNumber();
+      alert("Surat berhasil diduplikasi dengan nomor surat baru.");
+    }
+
+    // EXPORT / IMPORT JSON
+    function exportJSON() {
+      const data = getFormData();
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `Surat_${data.nomor.replace(/\//g, '-')}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importJSON(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const data = JSON.parse(e.target.result);
+            applyFormData(data);
+            alert("Berhasil mengimpor konfigurasi surat dari JSON.");
+          } catch (err) {
+            alert("Gagal memproses file JSON. Format tidak valid.");
+          }
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    // INITIALIZATION
+    window.onload = function() {
+      updatePreview();
+    };
+  </script>
+</body>
+</html>
